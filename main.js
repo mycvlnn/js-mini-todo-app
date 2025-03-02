@@ -2,8 +2,6 @@ const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
 const tasks = [];
-let isEdit = false; // Biến đề đánh dấu là có đang edit hay không
-let idEdit = null;
 
 const taskList = $(".task-list");
 const todoForm = $(".todo-form");
@@ -59,17 +57,7 @@ const handleSubmitTask = (e) => {
 
 renderTasks();
 
-// -------- Xử lý event --------
-
-// Xử lý sự kiện submit form
-todoForm.addEventListener("submit", handleSubmitTask);
-
-// Ngăn chặn blur input khi click vào add
-submitBtn.addEventListener("mousedown", (e) => {
-    e.preventDefault();
-});
-
-taskList.addEventListener("click", (e) => {
+const handleTaskActions = (e) => {
     const taskItemElement = e.target.closest(".task-item");
     if (!taskItemElement) return;
     const taskIndex = Number(taskItemElement.dataset.index);
@@ -85,8 +73,10 @@ taskList.addEventListener("click", (e) => {
 
     // Xử lý xoá
     if (e.target.matches(".task-btn.delete")) {
-        tasks.splice(taskIndex, 1);
-        renderTasks();
+        if (confirm(`Are you sure you want to delete "${taskItem.title}"`)) {
+            tasks.splice(taskIndex, 1);
+            renderTasks();
+        }
     }
 
     // Xử lý đánh dấu là hoàn thành
@@ -94,4 +84,16 @@ taskList.addEventListener("click", (e) => {
         taskItem.completed = !taskItem.completed;
         renderTasks();
     }
+};
+
+// -------- Xử lý event --------
+
+// Xử lý sự kiện submit form
+todoForm.addEventListener("submit", handleSubmitTask);
+
+// Ngăn chặn blur input khi click vào add
+submitBtn.addEventListener("mousedown", (e) => {
+    e.preventDefault();
 });
+
+taskList.addEventListener("click", handleTaskActions);
