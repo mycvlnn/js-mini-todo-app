@@ -25,7 +25,7 @@ const renderTasks = () => {
             <div class="task-action">
                 <button class="task-btn edit">Edit</button>
                 <button class="task-btn done">
-                    ${task.completed ? "Mark as Done" : "Mark as UnDone"}
+                    ${task.completed ? "Mark as UnDone" : "Mark as Done"}
                 </button>
                 <button class="task-btn delete">Delete</button>
             </div>
@@ -62,7 +62,10 @@ const editTask = () => {
 
 const handleSubmitTask = (e) => {
     e.preventDefault();
-    if (!input.value) return;
+    if (!input.value.trim()) {
+        alert("Please enter something!");
+        return;
+    }
     if (isEdit) editTask();
     else addTask();
 };
