@@ -18,9 +18,9 @@ const renderTasks = () => {
     }
 
     const html = tasks
-        .map((task) => {
+        .map((task, index) => {
             return `
-        <li class="task-item ${task.completed ? "completed" : ""}" data-id="${task.id}">
+        <li class="task-item ${task.completed ? "completed" : ""}" data-index="${index}">
             <span class="task-title">${task.title}</span>
             <div class="task-action">
                 <button class="task-btn edit">Edit</button>
@@ -39,7 +39,6 @@ const renderTasks = () => {
 
 const addTask = () => {
     const task = {
-        id: tasks.length + 1,
         title: input.value,
         completed: false,
     };
@@ -48,26 +47,14 @@ const addTask = () => {
     input.value = "";
 };
 
-const editTask = () => {
-    const taskEdit = tasks.find((item) => item.id === idEdit);
-    if (taskEdit) {
-        taskEdit.title = input.value;
-        isEdit = false;
-        idEdit = null;
-        submitBtn.innerText = "Add";
-        renderTasks();
-        input.value = "";
-    }
-};
-
 const handleSubmitTask = (e) => {
     e.preventDefault();
     if (!input.value.trim()) {
         alert("Please enter something!");
         return;
     }
-    if (isEdit) editTask();
-    else addTask();
+
+    addTask();
 };
 
 renderTasks();
@@ -82,39 +69,29 @@ submitBtn.addEventListener("mousedown", (e) => {
     e.preventDefault();
 });
 
-console.log(taskList);
-
 taskList.addEventListener("click", (e) => {
     const taskItemElement = e.target.closest(".task-item");
-    const taskId = Number(taskItemElement.dataset.id);
+    if (!taskItemElement) return;
+    const taskIndex = Number(taskItemElement.dataset.index);
+    const taskItem = tasks[taskIndex];
 
     // Xử lý khi click vào nút edit
     if (e.target.matches(".task-btn.edit")) {
-        const task = tasks.find((item) => item.id === taskId);
+        const newTitle = prompt("Please enter the new task", taskItem.title);
+        taskItem.title = newTitle;
 
-        if (task) {
-            input.value = task.title;
-            submitBtn.innerText = "Edit";
-            idEdit = task.id;
-            isEdit = true;
-        }
+        renderTasks();
     }
 
     // Xử lý xoá
     if (e.target.matches(".task-btn.delete")) {
-        const taskIndex = tasks.findIndex((task) => task.id === taskId);
-        if (taskIndex >= 0) {
-            tasks.splice(taskIndex, 1);
-            renderTasks();
-        }
+        tasks.splice(taskIndex, 1);
+        renderTasks();
     }
 
     // Xử lý đánh dấu là hoàn thành
     if (e.target.matches(".task-btn.done")) {
-        const task = tasks.find((item) => item.id === taskId);
-        if (task) {
-            task.completed = !task.completed;
-            renderTasks();
-        }
+        taskItem.completed = !taskItem.completed;
+        renderTasks();
     }
 });
