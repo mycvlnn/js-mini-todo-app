@@ -10,7 +10,7 @@ const submitBtn = $("#submit");
 
 const renderTasks = () => {
     if (tasks.length <= 0) {
-        taskList.innerHTML = `<p>No task yet</p>`;
+        taskList.innerHTML = `<p class="empty-message">No task available.</p>`;
 
         return;
     }
@@ -66,6 +66,12 @@ const handleTaskActions = (e) => {
     // Xử lý khi click vào nút edit
     if (e.target.matches(".task-btn.edit")) {
         const newTitle = prompt("Please enter the new task", taskItem.title);
+        if (newTitle === null) return;
+        console.log(newTitle);
+        if (!newTitle.trim()) {
+            alert("Please enter something!");
+            return;
+        }
         taskItem.title = newTitle;
 
         renderTasks();

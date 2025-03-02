@@ -117,3 +117,9 @@ main {
     cursor: pointer;
     text-decoration: underline;
 }
+
+.empty-message {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}
