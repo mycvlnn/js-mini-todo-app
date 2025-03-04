@@ -36,6 +36,15 @@ const renderTasks = () => {
 };
 
 const addTask = () => {
+    const isDuplicate = tasks.some(
+        (task) => task.title.toLowerCase() === input.value.toLowerCase()
+    );
+
+    if (isDuplicate) {
+        alert("Task is already exist!");
+        return;
+    }
+
     const task = {
         title: input.value,
         completed: false,
@@ -67,11 +76,21 @@ const handleTaskActions = (e) => {
     if (e.target.matches(".task-btn.edit")) {
         const newTitle = prompt("Please enter the new task", taskItem.title);
         if (newTitle === null) return;
-        console.log(newTitle);
         if (!newTitle.trim()) {
             alert("Please enter something!");
             return;
         }
+
+        const isDuplicate = tasks.some(
+            (task, index) =>
+                task.title.toLowerCase() === newTitle.toLowerCase() && index !== taskIndex
+        );
+
+        if (isDuplicate) {
+            alert("Task is already exist!");
+            return;
+        }
+
         taskItem.title = newTitle;
 
         renderTasks();
