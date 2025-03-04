@@ -54,8 +54,10 @@ const addTask = () => {
         return;
     }
 
+    const newTitle = DOMPurify.sanitize(input.value.trim());
+
     const task = {
-        title: input.value,
+        title: newTitle,
         completed: false,
     };
     tasks.push(task);
@@ -96,7 +98,7 @@ const handleTaskActions = (e) => {
             return;
         }
 
-        taskItem.title = newTitle;
+        taskItem.title = DOMPurify.sanitize(newTitle.trim());
 
         renderTasks();
         saveTasks();
