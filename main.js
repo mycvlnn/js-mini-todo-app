@@ -35,12 +35,16 @@ const renderTasks = () => {
     taskList.innerHTML = html;
 };
 
-const addTask = () => {
-    const isDuplicate = tasks.some(
-        (task) => task.title.toLowerCase() === input.value.toLowerCase()
+// Kiểm tra xem task có bị trùng không
+const isDuplicateTask = (newTitle, excludeIndex = -1) => {
+    return tasks.some(
+        (task, index) =>
+            task.title.toLowerCase() === newTitle.toLowerCase() && index !== excludeIndex
     );
+};
 
-    if (isDuplicate) {
+const addTask = () => {
+    if (isDuplicateTask(input.value)) {
         alert("Task is already exist!");
         return;
     }
@@ -81,12 +85,7 @@ const handleTaskActions = (e) => {
             return;
         }
 
-        const isDuplicate = tasks.some(
-            (task, index) =>
-                task.title.toLowerCase() === newTitle.toLowerCase() && index !== taskIndex
-        );
-
-        if (isDuplicate) {
+        if (isDuplicateTask(newTitle, taskIndex)) {
             alert("Task is already exist!");
             return;
         }
