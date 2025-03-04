@@ -1,12 +1,17 @@
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
-const tasks = [];
+const STORAGE_KEY = "TODO_LIST";
+const tasks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
 const taskList = $(".task-list");
 const todoForm = $(".todo-form");
 const input = $("#todo-input");
 const submitBtn = $("#submit");
+
+const saveTasks = () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+};
 
 const renderTasks = () => {
     if (tasks.length <= 0) {
@@ -55,6 +60,7 @@ const addTask = () => {
     };
     tasks.push(task);
     renderTasks();
+    saveTasks();
     input.value = "";
 };
 
@@ -93,6 +99,7 @@ const handleTaskActions = (e) => {
         taskItem.title = newTitle;
 
         renderTasks();
+        saveTasks();
     }
 
     // Xử lý xoá
@@ -100,6 +107,7 @@ const handleTaskActions = (e) => {
         if (confirm(`Are you sure you want to delete "${taskItem.title}"`)) {
             tasks.splice(taskIndex, 1);
             renderTasks();
+            saveTasks();
         }
     }
 
@@ -107,6 +115,7 @@ const handleTaskActions = (e) => {
     if (e.target.matches(".task-btn.done")) {
         taskItem.completed = !taskItem.completed;
         renderTasks();
+        saveTasks();
     }
 };
 
