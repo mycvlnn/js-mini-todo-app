@@ -24,7 +24,7 @@ const renderTasks = () => {
         .map((task, index) => {
             return `
         <li class="task-item ${task.completed ? "completed" : ""}" data-index="${index}">
-            <span class="task-title">${task.title}</span>
+            <span class="task-title">${escapeHtml(task.title)}</span>
             <div class="task-action">
                 <button class="task-btn edit">Edit</button>
                 <button class="task-btn done">
@@ -48,13 +48,22 @@ const isDuplicateTask = (newTitle, excludeIndex = -1) => {
     );
 };
 
+// Hàm chuyển đổi ký tự HTML đặc biệt thành ký tự escape
+// Ví dụ: < -> &lt;, > -> &gt;, & -> &amp;
+function escapeHtml(unsafe) {
+    const div = document.createElement("div");
+    div.innerText = unsafe; // Sử dụng innerText để chuyển đổi ký tự đặc biệt
+
+    return div.innerHTML; // Trả về HTML đã được escape
+}
+
 const addTask = () => {
     if (isDuplicateTask(input.value)) {
         alert("Task is already exist!");
         return;
     }
 
-    const newTitle = DOMPurify.sanitize(input.value.trim());
+    const newTitle = input.value.trim();
 
     const task = {
         title: newTitle,
@@ -98,7 +107,7 @@ const handleTaskActions = (e) => {
             return;
         }
 
-        taskItem.title = DOMPurify.sanitize(newTitle.trim());
+        taskItem.title = newTitle.trim();
 
         renderTasks();
         saveTasks();
